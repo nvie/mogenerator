@@ -54,6 +54,20 @@ end startGeneration
 
 on updateProjectXmod(_project)
 	tell application "Xcode"
+		-- First, iterate over every .xcdatamodeld (notice the 'd') in the project.
+		set modeldList to every file reference of _project whose file kind is "wrapper.xcdatamodeld"
+		repeat with modeldIt in modeldList
+			if comments of modeldIt contains "xmod" then
+				-- Find the 'active' model version
+				set currentVersionFile to full path of modeldIt & "/.xccurrentversion"
+				set activeModelVersionFilename to do shell script "/usr/libexec/PlistBuddy -c 'print _XCCurrentVersionName' " & currentVersionFile
+				set activeModelVersion to full path of modeldIt & "/" & activeModelVersionFilename
+				
+				-- Then run it on that
+				my startMogenerator(_project, activeModelVersion)
+			end if
+		end repeat
+		
 		-- Iterate over every .xcdatamodel in the project.
 		set modelList to every file reference of _project whose file kind is "wrapper.xcdatamodel"
 		repeat with modelIt in modelList
