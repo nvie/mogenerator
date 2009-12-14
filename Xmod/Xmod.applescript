@@ -64,7 +64,7 @@ on updateProjectXmod(_project)
 				set activeModelVersion to full path of modeldIt & "/" & activeModelVersionFilename
 				
 				-- Then run it on that
-				my startMogenerator(_project, activeModelVersion)
+				my startGeneration(_project, activeModelVersion)
 			end if
 		end repeat
 		
